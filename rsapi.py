@@ -3,7 +3,7 @@ import sys
 import requests, json
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
-
+from time import sleep
 def check_rs_boot():
     """
     Function to check if rancher server is UP or not
@@ -34,6 +34,8 @@ def get_k8s_proj_id():
     so getting the k8s template ID for this server instance
     :return: template ID of k8s project template
     """
+    print "INFO : Sleeping 20 seconds for server to come up"
+    sleep(20)
     rsurl = 'http://' + rsip + ':8080/v2-beta/projectTemplates?name=kubernetes'
     resp = requests.get(rsurl)
     if resp.status_code != 200:
@@ -77,6 +79,8 @@ def generate_token():
     Request rancher server to generate authorization token
     :return: Nothing
     """
+    print "INFO : Sleeping 10 seconds for host to get activated"
+    sleep(10)
     rsurl = 'http://' + rsip + ':8080/v2-beta/projects/'+ k8s_envid +'/registrationtokens'
     req_body = '{"description":"new token for rancherk8s", "name":"token_rancherk8s"}'
     resp = requests.post(rsurl,
@@ -101,16 +105,16 @@ def get_agent_cmd():
 # Checking for Rancher Server IP
 # and exiting if IP is not set
 #
-#rsip = '130.211.202.2'
-#step = 'all'
-
+rsip = '104.197.179.220'
+step = 'all'
+"""
 try:
     rsip = os.environ['RANCHER_SERVER_IP']
     step = os.environ['STEP']
 except KeyError:
     print "ERROR : Please set environment variable RANCHER_SERVER_IP"
     sys.exit(1)
-
+"""
 print "INFO : Value of RANCHER_SERVER_IP is {} and value of step is {} ".format(rsip, step)
 if step == '1' or step == 'all':
     check_rs_boot()
