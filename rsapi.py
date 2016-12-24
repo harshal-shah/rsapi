@@ -128,4 +128,4 @@ if step == '5' or step == 'all':
     generate_token()
 if step == '6' or step == 'all':
     agent_cmd = get_agent_cmd()
-    print "INFO : Value of agent_cmd is {} ".format(agent_cmd)
+    print "INFO : Value of agent_cmd is \n {} ".format(agent_cmd)
