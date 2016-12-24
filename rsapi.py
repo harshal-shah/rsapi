@@ -95,7 +95,6 @@ def get_agent_cmd():
     Get docker command for rancher agent from rancher server
     :return: string containing docker command
     """
-    sleep(10)
     rsurl = 'http://' + rsip + ':8080/v2-beta/registrationtokens?name=token_rancherk8s'
     resp = requests.get(rsurl)
     if resp.status_code != 200:
@@ -126,6 +125,6 @@ if step == '4' or step == 'all':
     set_active_host()
 if step == '5' or step == 'all':
     generate_token()
-if step == '6' or step == 'all':
+if step == '6':
     agent_cmd = get_agent_cmd()
     print "INFO : Value of agent_cmd is \n {} ".format(agent_cmd)
