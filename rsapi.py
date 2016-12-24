@@ -106,16 +106,13 @@ def get_agent_cmd():
 # Checking for Rancher Server IP
 # and exiting if IP is not set
 #
-rsip = '104.197.179.220'
-step = 'all'
-"""
 try:
     rsip = os.environ['RANCHER_SERVER_IP']
     step = os.environ['STEP']
 except KeyError:
     print "ERROR : Please set environment variable RANCHER_SERVER_IP"
     sys.exit(1)
-"""
+
 print "INFO : Value of RANCHER_SERVER_IP is {} and value of step is {} ".format(rsip, step)
 if step == '1' or step == 'all':
     check_rs_boot()
