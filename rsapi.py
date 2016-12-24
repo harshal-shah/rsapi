@@ -95,6 +95,7 @@ def get_agent_cmd():
     Get docker command for rancher agent from rancher server
     :return: string containing docker command
     """
+    sleep(10)
     rsurl = 'http://' + rsip + ':8080/v2-beta/registrationtokens?name=token_rancherk8s'
     resp = requests.get(rsurl)
     if resp.status_code != 200:
