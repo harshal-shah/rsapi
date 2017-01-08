@@ -49,7 +49,7 @@ def create_k8s_env():
     :return: Env ID of the env created
     """
     rsurl = 'http://' + rsip + ':8080/v2-beta/projects/'
-    req_body=''.join(['{"description": "rancher project for kubernetes", "name": "rancherk8s", "projectTemplateId": "',
+    req_body=''.join(['{"description": "rancher project for kubernetes", "name": "' + rancher_proj_id + '", "projectTemplateId": "',
                       k8spid,
                       '", "allowSystemRole": false,"members": [ ],"virtualMachine": false,"servicesPortRange": null}'])
     resp = requests.post(rsurl,
@@ -82,7 +82,7 @@ def generate_token():
     print "INFO : Sleeping 10 seconds for host to get activated"
     sleep(10)
     rsurl = 'http://' + rsip + ':8080/v2-beta/projects/'+ k8s_envid +'/registrationtokens'
-    req_body = '{"description":"new token for rancherk8s", "name":"token_rancherk8s"}'
+    req_body = '{"description":"new token for rancher project", "name":"token_' + rancher_proj_id + '" }'
     resp = requests.post(rsurl,
                         data=req_body,
                         headers={'Accept': 'text/plain', 'Content-Type': 'application/json'})
@@ -95,7 +95,7 @@ def get_agent_cmd():
     Get docker command for rancher agent from rancher server
     :return: string containing docker command
     """
-    rsurl = 'http://' + rsip + ':8080/v2-beta/registrationtokens?name=token_rancherk8s'
+    rsurl = 'http://' + rsip + ':8080/v2-beta/registrationtokens?name=token_' + rancher_proj_id
     resp = requests.get(rsurl)
     if resp.status_code != 200:
         raise Exception("ERROR : Step 2 : Failed to get Agent command from Rancher Server {}".format(rsurl))
@@ -109,10 +109,15 @@ try:
     rsip = os.environ['RANCHER_SERVER_IP']
     step = os.environ['STEP']
 except KeyError:
-    print "ERROR : Please set environment variable RANCHER_SERVER_IP"
+    print "ERROR : Please set environment variables RANCHER_SERVER_IP, STEP"
     sys.exit(1)
+if os.environ['RANCHER_PROJECT_ID'] == "":
+    rancher_proj_id = "rancherk8s"
+else:
+    rancher_proj_id = os.environ['RANCHER_PROJECT_ID']
 
-print "INFO : Value of RANCHER_SERVER_IP is {} and value of step is {} ".format(rsip, step)
+print "INFO : Value of RANCHER_SERVER_IP is {} , value of step is {} and value of Rancher project ID is {}".\
+format(rsip, step, rancher_proj_id)
 if step == '1' or step == 'all':
     check_rs_boot()
 if step == '2' or step == 'all':
